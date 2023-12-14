@@ -1,20 +1,20 @@
-# fish/completions/runscript.fish
-function __fish_runscript_script_names
-    cat $runscript__history_file
+# fish/completions/run.fish
+function __fish_run_script_names
+    cat $run__history_file
 end
 
-function __fish_runscript_complete
+function __fish_run_complete
     __fish_use_subcommand
     set cmd (commandline -opc)
     set current (commandline -ct)
 
     switch $cmd
-        case "runscript"
+        case "run"
             if string match -q -- "--*" $current
                 return
             end
 
-            set -l script_names (__fish_runscript_script_names)
+            set -l script_names (__fish_run_script_names)
             for script in $script_names
                 echo $script
             end
@@ -23,4 +23,4 @@ function __fish_runscript_complete
     end
 end
 
-complete -c runscript -f -a "(__fish_runscript_complete)"
+complete -c run -f -a "(__fish_run_complete)"

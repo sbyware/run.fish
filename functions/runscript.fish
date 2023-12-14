@@ -1,10 +1,10 @@
-function runscript --description "Runs the corresponding script in the $runscript__script_dir directory"
+function run --description "Runs the corresponding script in the $run__script_dir directory"
     set --local script_name $argv[1]
     set --local script_args $argv[2..-1]
     set --local script_path ""
 
     if test -z $script_name
-        echo "[runscript] Error: No script name provided"
+        echo "[run] Error: No script name provided"
         __print_help
         return 1
     end
@@ -15,61 +15,61 @@ function runscript --description "Runs the corresponding script in the $runscrip
     end
 
     if test $script_name = "--version"
-        echo "[runscript] v$runscript__version by $runscript__author ($runscript__repo_url)"
+        echo "[run] v$run__version by $run__author ($run__repo_url)"
         return 0
     end
 
-    for extension in $runscript__allowed_extensions
-        if test -f "$runscript__script_dir/$script_name.$extension"
-            set script_path "$runscript__script_dir/$script_name.$extension"
+    for extension in $run__allowed_extensions
+        if test -f "$run__script_dir/$script_name.$extension"
+            set script_path "$run__script_dir/$script_name.$extension"
             break
         end
     end
 
     if test -z $script_path
-        echo "[runscript] Error: No script found with name $script_name.[$runscript__allowed_extensions]"
+        echo "[run] Error: No script found with name $script_name.[$run__allowed_extensions]"
         return 1
     end
 
     if test ! -x $script_path
-        echo "[runscript] Error: $script_path is not executable"
+        echo "[run] Error: $script_path is not executable"
         return 1
     end
 
-    echo "[runscript] Running $script_path $script_args..."
+    echo "[run] Running $script_path $script_args..."
 
-    echo "$script_name $script_args" >> $runscript__history_file
+    echo "$script_name $script_args" >> $run__history_file
 
     $script_path $script_args
 
-    echo "[runscript > $script_name] Done!"
+    echo "[run > $script_name] Done!"
 
     return 0
 end
 
-function runscript.delete --description "Deletes a script in the $runscript__script_dir directory"
+function run.delete --description "Deletes a script in the $run__script_dir directory"
     set --local script_name $argv[1]
 
     if test (count $argv) -ne 1
-        echo "[runscript-delete] Usage: runscript-delete <script_name>"
+        echo "[run-delete] Usage: run-delete <script_name>"
         return 1
     end
 
-    set --local script_path $runscript__script_dir/$script_name
+    set --local script_path $run__script_dir/$script_name
 
-    for extension in $runscript__allowed_extensions
+    for extension in $run__allowed_extensions
         if test -f "$script_path.$extension"
-            echo "[runscript-delete] Deleting $script_path.$extension..."
+            echo "[run-delete] Deleting $script_path.$extension..."
             rm "$script_path.$extension"
             return 0
         end
     end
 
-    echo "[runscript-delete] No script found with name $script_name"
+    echo "[run-delete] No script found with name $script_name"
     return 1
 end
 
-function runscript.link --description "Create symbolic link to an existing script in the $runscript__script_dir directory"
+function run.link --description "Create symbolic link to an existing script in the $run__script_dir directory"
     set --local script_path $argv[1]
     set --local script_full_name (basename $script_path)
     set --local script_name $argv[2]
@@ -81,21 +81,21 @@ function runscript.link --description "Create symbolic link to an existing scrip
     end
 
     if test (count $argv) -lt 1
-        echo "[runscript-link] Usage: runscript-link <script_path> <script_alias (optional)>"
+        echo "[run-link] Usage: run-link <script_path> <script_alias (optional)>"
         return 1
     end
 
     if test ! -f $script_path
-        echo "[runscript-link] Error: $script_path does not exist"
+        echo "[run-link] Error: $script_path does not exist"
         return 1
     end
 
     if test ! -x $script_path
-        echo "[runscript-link] Error: $script_path is not executable"
+        echo "[run-link] Error: $script_path is not executable"
         return 1
     end
 
-    for extension in $runscript__allowed_extensions
+    for extension in $run__allowed_extensions
         if test $script_extension = $extension
             set valid_extension 0
             break
@@ -103,120 +103,120 @@ function runscript.link --description "Create symbolic link to an existing scrip
     end
 
     if test $valid_extension -ne 0
-        echo "[runscript-link] Error: $script_extension is not a valid extension"
+        echo "[run-link] Error: $script_extension is not a valid extension"
         return 1
     end
 
-    if test -f "$runscript__script_dir/$script_name.$script_extension"
-        echo "[runscript-link] Error: $runscript__script_dir/$script_name.$script_extension already exists"
+    if test -f "$run__script_dir/$script_name.$script_extension"
+        echo "[run-link] Error: $run__script_dir/$script_name.$script_extension already exists"
         return 1
     end
 
-    echo "[runscript-link] Creating symbolic link '$runscript__script_dir/$script_name.$script_extension'..."
+    echo "[run-link] Creating symbolic link '$run__script_dir/$script_name.$script_extension'..."
 
-    ln -s $script_path "$runscript__script_dir/$script_name.$script_extension"
+    ln -s $script_path "$run__script_dir/$script_name.$script_extension"
 
-    echo "[runscript-link] Done! Created '$runscript__script_dir/$script_name.$script_extension'."
+    echo "[run-link] Done! Created '$run__script_dir/$script_name.$script_extension'."
 end
 
-function runscript.history --description "Lists the history of scripts run with runscript"
-    cat $runscript__history_file
+function run.history --description "Lists the history of scripts run with run"
+    cat $run__history_file
 end
 
-function runscript.log --description "Displays the runscript log file"
-    cat $runscript__log_file
+function run.log --description "Displays the run log file"
+    cat $run__log_file
 end
 
-function runscript.list --description "Lists all scripts in the $runscript__script_dir directory"
-    echo "[runscript-list] Scripts in $runscript__script_dir:"
-    for extension in $runscript__allowed_extensions
-        for script in $runscript__script_dir/*.$extension
+function run.list --description "Lists all scripts in the $run__script_dir directory"
+    echo "[run-list] Scripts in $run__script_dir:"
+    for extension in $run__allowed_extensions
+        for script in $run__script_dir/*.$extension
             echo "- $(basename $script .$extension)"
         end
     end
 end
 
-function runscript.edit --description "Opens the script in the $runscript__script_dir directory in $EDITOR"
+function run.edit --description "Opens the script in the $run__script_dir directory in $EDITOR"
     if test (count $argv) -ne 1
-        echo "[runscript-edit] Usage: runscript-edit <script_name>"
+        echo "[run-edit] Usage: run-edit <script_name>"
         return 1
     end
 
     set --local script_name $argv[1]
-    set --local script_path $runscript__script_dir/$script_name
+    set --local script_path $run__script_dir/$script_name
 
-    for extension in $runscript__allowed_extensions
+    for extension in $run__allowed_extensions
         if test -f "$script_path.$extension"
-            echo "[runscript-edit] Opening $script_path.$extension in $EDITOR..."
+            echo "[run-edit] Opening $script_path.$extension in $EDITOR..."
             $EDITOR "$script_path.$extension"
             return 0
         end
     end
 
-    echo "[runscript-edit] No script found with name $script_name"
+    echo "[run-edit] No script found with name $script_name"
     return 1
 end
 
-function runscript.create --description "Creates a new script in the $runscript__script_dir directory"
+function run.create --description "Creates a new script in the $run__script_dir directory"
     set --local script_name $argv[1]
     set --local script_type $argv[2]
 
     if test (count $argv) -ne 2
-        echo "[runscript-create] Usage: runscript-create <script_name> <script_type>"
+        echo "[run-create] Usage: run-create <script_name> <script_type>"
         return 1
     end
 
     set --local executor_path (which $script_type)
 
     if test -z "$executor_path"
-        echo "[runscript-create] Couldn't find binary for $script_type"
+        echo "[run-create] Couldn't find binary for $script_type"
         return 1
     end
 
-    for executable in $runscript__allowed_executables
+    for executable in $run__allowed_executables
         if test $executor_path = $executable
             break
         end
     end
 
     if test $executor_path != $executable
-        echo "[runscript-create] Error: $script_type is not an allowed executable"
+        echo "[run-create] Error: $script_type is not an allowed executable"
         return 1
     end
 
-    if test -f "$runscript__script_dir/$script_name.$script_extension"
-        echo "[runscript-create] $runscript__script_dir/$script_name.$script_extension already exists"
+    if test -f "$run__script_dir/$script_name.$script_extension"
+        echo "[run-create] $run__script_dir/$script_name.$script_extension already exists"
         return 1
     end
 
-    echo "[runscript-create] Creating '$runscript__script_dir/$script_name.$script_extension'..."
+    echo "[run-create] Creating '$run__script_dir/$script_name.$script_extension'..."
 
-    echo "#!$executor_path" > "$runscript__script_dir/$script_name.$script_extension"
-    chmod +x "$runscript__script_dir/$script_name.$script_extension"
+    echo "#!$executor_path" > "$run__script_dir/$script_name.$script_extension"
+    chmod +x "$run__script_dir/$script_name.$script_extension"
 
-    echo "[runscript-create] Done! Created '$runscript__script_dir/$script_name.$script_extension'. Opening in $EDITOR..."
+    echo "[run-create] Done! Created '$run__script_dir/$script_name.$script_extension'. Opening in $EDITOR..."
 
-    $EDITOR "$runscript__script_dir/$script_name.$script_extension"
+    $EDITOR "$run__script_dir/$script_name.$script_extension"
 end
 
 # Private functions
 
-function __log --description "Logs a message to the runscript log file"
-    echo "[$(date)] $argv" >> $runscript__log_file
+function __log --description "Logs a message to the run log file"
+    echo "[$(date)] $argv" >> $run__log_file
 end
 
 function __print_help --description "Prints the help message"
-    echo "[runscript] Usage: runscript [options] <script_name> [...args]"
+    echo "[run] Usage: run [options] <script_name> [...args]"
     echo "    --help: Prints this help message"
-    echo "    --version: Prints the version of runscript"
+    echo "    --version: Prints the version of run"
     echo "Additional commands:"
-    echo "  runscript.delete <script_name>: Deletes a script in the $runscript__script_dir directory"
-    echo "  runscript.link <script_path> <script_alias (optional)>: Create symbolic link to an existing script in the $runscript__script_dir directory"
-    echo "  runscript.history: Lists the history of scripts run with runscript"
-    echo "  runscript.log: Displays the runscript log file"
-    echo "  runscript.list: Lists all scripts in the $runscript__script_dir directory"
-    echo "  runscript.edit <script_name>: Opens the script in the $runscript__script_dir directory in $EDITOR"
-    echo "  runscript.create <script_name> <script_type>: Creates a new script in the $runscript__script_dir directory"
+    echo "  run.delete <script_name>: Deletes a script in the $run__script_dir directory"
+    echo "  run.link <script_path> <script_alias (optional)>: Create symbolic link to an existing script in the $run__script_dir directory"
+    echo "  run.history: Lists the history of scripts run with run"
+    echo "  run.log: Displays the run log file"
+    echo "  run.list: Lists all scripts in the $run__script_dir directory"
+    echo "  run.edit <script_name>: Opens the script in the $run__script_dir directory in $EDITOR"
+    echo "  run.create <script_name> <script_type>: Creates a new script in the $run__script_dir directory"
     echo ""
-    echo "Examples: runscript.create test node, runscript.link /path/to/script.sh, runscript.edit test"
+    echo "Examples: run.create test node, run.link /path/to/script.sh, run.edit test"
 end

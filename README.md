@@ -1,17 +1,17 @@
-# runscript.fish
+# run.fish
 
 Simple script management using fish shell.
 
 ## Installation
 
 ```fish
-fisher install sby051/runscript.fish
+fisher install sby051/run.fish
 ```
 
 ## Usage
 
 ```fish
-runscript <script-name>
+run <script-name>
 ```
 
 ```fish
@@ -26,20 +26,20 @@ editscript <script-name>
 delscript <script-name>
 ```
 
-'runscript' will run the script with the given name (regardless of extension, script names are unique regardless of extension!). 'newscript' will create a new script with the given name and executor. 'editscript' will open the script with the given name in the default editor. 'delscript' will delete the script with the given name.
+'run' will run the script with the given name (regardless of extension, script names are unique regardless of extension!). 'newscript' will create a new script with the given name and executor. 'editscript' will open the script with the given name in the default editor. 'delscript' will delete the script with the given name.
 
 ```fish
-runscript -h
+run -h
 ```
 
 ```fish
-runscript -v
+run -v
 ```
 
-'runscript -h' will print the help message. 'runscript -v' will print the version.
+'run -h' will print the help message. 'run -v' will print the version.
 
 ## Example
 
 ```fish
-runscript hello
+run hello
 ```
