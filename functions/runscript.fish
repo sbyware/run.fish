@@ -74,7 +74,7 @@ function runscript.link --description "Create symbolic link to an existing scrip
     set --local script_full_name (basename $script_path)
     set --local script_name $argv[2]
     set --local script_extension (echo $script_full_name | cut -d'.' -f2)
-    set --local valid_extension 0
+    set --local valid_extension 1
 
     if test -z $script_name
         set script_name (echo $script_full_name | cut -d'.' -f1)
@@ -97,7 +97,7 @@ function runscript.link --description "Create symbolic link to an existing scrip
 
     for extension in $runscript__allowed_extensions
         if test $script_extension = $extension
-            set valid_extension 1
+            set valid_extension 0
             break
         end
     end
