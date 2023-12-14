@@ -72,13 +72,12 @@ end
 function runscript.link --description "Create symbolic link to an existing script in the $runscript__script_dir directory"
     set --local script_path $argv[1]
     set --local script_full_name (basename $script_path)
-    set --local script_name (echo $script_full_name | cut -d'.' -f1)
+    set --local script_name $argv[2]
     set --local script_extension (echo $script_full_name | cut -d'.' -f2)
     set --local valid_extension 0
 
-    if test $argv[2]
-        echo "[runscript-link] Using $argv[2] as script alias..."
-        set --local script_name $argv[2]
+    if test -z $script_name
+        set script_name (echo $script_full_name | cut -d'.' -f1)
     end
 
     if test (count $argv) -lt 1
@@ -98,12 +97,12 @@ function runscript.link --description "Create symbolic link to an existing scrip
 
     for extension in $runscript__allowed_extensions
         if test $script_extension = $extension
-            set --local valid_extension 1
+            set valid_extension 1
             break
         end
     end
 
-    if test $valid_extension -eq 1
+    if test $valid_extension -ne 0
         echo "[runscript-link] Error: $script_extension is not a valid extension"
         return 1
     end
