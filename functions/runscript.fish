@@ -207,10 +207,17 @@ function __log --description "Logs a message to the runscript log file"
 end
 
 function __print_help --description "Prints the help message"
-    echo "[runscript] Usage: runscript <script_name> [script_args]"
+    echo "[runscript] Usage: runscript [options] <script_name> [...args]"
+    echo "    --help: Prints this help message"
+    echo "    --version: Prints the version of runscript"
+    echo "Additional commands:"
+    echo "  runscript.delete <script_name>: Deletes a script in the $runscript__script_dir directory"
+    echo "  runscript.link <script_path> <script_alias (optional)>: Create symbolic link to an existing script in the $runscript__script_dir directory"
+    echo "  runscript.history: Lists the history of scripts run with runscript"
+    echo "  runscript.log: Displays the runscript log file"
+    echo "  runscript.list: Lists all scripts in the $runscript__script_dir directory"
+    echo "  runscript.edit <script_name>: Opens the script in the $runscript__script_dir directory in $EDITOR"
+    echo "  runscript.create <script_name> <script_type>: Creates a new script in the $runscript__script_dir directory"
     echo ""
-    echo "Available commands:"
-
-    # echo out all functions with a description in this file (use cat)
-    cat ./runscript.fish | grep --extended-regexp --only-matching "function [a-zA-Z0-9._-]+ --description \"[^\"]+\"" | sed --regexp-extended "s/function ([a-zA-Z0-9._-]+) --description \"([^\"]+)\"/  \1: \2/g"
+    echo "Examples: runscript.create test node, runscript.link /path/to/script.sh, runscript.edit test"
 end
