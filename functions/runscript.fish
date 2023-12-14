@@ -47,8 +47,29 @@ function runscript --description "Runs the corresponding script in the $runscrip
     return 0
 end
 
+function runscript.delete --description "Deletes a script in the $runscript__script_dir directory"
+    set --local script_name $argv[1]
+
+    if test (count $argv) -ne 1
+        echo "[runscript-delete] Usage: runscript-delete <script_name>"
+        return 1
+    end
+
+    set --local script_path $runscript__script_dir/$script_name
+
+    for extension in $runscript__allowed_extensions
+        if test -f "$script_path.$extension"
+            echo "[runscript-delete] Deleting $script_path.$extension..."
+            rm "$script_path.$extension"
+            return 0
+        end
+    end
+
+    echo "[runscript-delete] No script found with name $script_name"
+    return 1
+end
+
 function runscript.link --description "Create symbolic link to an existing script in the $runscript__script_dir directory"
-    # Usage: runscript.link <script_path> <script_alias?>
     set --local script_path $argv[1]
     set --local script_full_name (basename $script_path)
     set --local script_name (echo $script_full_name | cut -d'.' -f1)
@@ -56,6 +77,7 @@ function runscript.link --description "Create symbolic link to an existing scrip
     set --local valid_extension 0
 
     if test $argv[2]
+        echo "[runscript-link] Using $argv[2] as script alias..."
         set --local script_name $argv[2]
     end
 
@@ -178,6 +200,8 @@ function runscript.create --description "Creates a new script in the $runscript_
     $EDITOR "$runscript__script_dir/$script_name.$script_extension"
 end
 
+# Private functions
+
 function __log --description "Logs a message to the runscript log file"
     echo "[$(date)] $argv" >> $runscript__log_file
 end
@@ -186,12 +210,15 @@ function __print_help --description "Prints the help message"
     echo "[runscript] Usage: runscript <script_name> [script_args]"
     echo ""
     echo "Available commands:"
-    echo "  runscript <script_name> [script_args]           Runs the corresponding script in the $runscript__script_dir directory"
-    echo "  runscript.list                                  Lists all scripts in the $runscript__script_dir directory"
-    echo "  runscript.edit <script_name>                    Opens the script in the $runscript__script_dir directory in $EDITOR"
-    echo "  runscript.create <script_name> <script_type>    Creates a new script in the $runscript__script_dir directory"
-    echo "  runscript.link <path/to/script>                 Create symbolic link to an existing script in the $runscript__script_dir directory"
-    echo "  runscript.history                               Lists the history of scripts run with runscript"
-    echo "  runscript.log                                   Displays the runscript log file"
-    echo "  runscript.help                                  Displays this help message"
+
+    for function in (functions -d)
+        set --local function_name (echo $function | cut -d' ' -f1)
+        set --local function_description (echo $function | cut -d' ' -f2-)
+
+        if test $function_name = "runscript"
+            continue
+        end
+
+        echo "- $function_name: $function_description"
+    end
 end
