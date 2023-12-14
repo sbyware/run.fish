@@ -211,14 +211,6 @@ function __print_help --description "Prints the help message"
     echo ""
     echo "Available commands:"
 
-    for function in (functions -d runscript)
-        set --local function_name (echo $function | cut -d' ' -f1)
-        set --local function_description (echo $function | cut -d' ' -f2-)
-
-        if test $function_name = "runscript"
-            continue
-        end
-
-        echo "- $function_name: $function_description"
-    end
+    # echo out all functions with a description in this file (use cat)
+    cat ./runscript.fish | grep --extended-regexp --only-matching "function [a-zA-Z0-9._-]+ --description \"[^\"]+\"" | sed --regexp-extended "s/function ([a-zA-Z0-9._-]+) --description \"([^\"]+)\"/  \1: \2/g"
 end
