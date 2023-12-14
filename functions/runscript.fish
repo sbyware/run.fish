@@ -211,7 +211,7 @@ function __print_help --description "Prints the help message"
     echo ""
     echo "Available commands:"
 
-    for function in (functions -d)
+    for function in (functions -d runscript)
         set --local function_name (echo $function | cut -d' ' -f1)
         set --local function_description (echo $function | cut -d' ' -f2-)
 
