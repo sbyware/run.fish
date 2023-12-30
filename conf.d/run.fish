@@ -1,13 +1,13 @@
+set -gx run__allowed_extensions "fish" "js" "bun.ts" "py" "sh"
+set -gx run__allowed_executables "fish" "node" "bun" "python3" "bash"
+set -gx run__dir "$HOME/.run"
+set -gx run__history_file "$run__dir/.history"
+set -gx run__script_dir "$run__dir/scripts"
+set -gx run__log_file "$run__dir/.log"
+set -gx run__version "1.0.0"
+set -gx run__repo_url "https://github.com/sby051/run.fish"
+
 function _run_install --on-event run_install
-    echo "[run.fish installer] setting up run variables"
-    set -gx run__allowed_extensions "fish" "js" "bun.ts" "py" "sh"
-    set -gx run__allowed_executables "fish" "node" "bun" "python3" "bash"
-    set -gx run__dir "$HOME/.run"
-    set -gx run__history_file "$run__dir/.history"
-    set -gx run__script_dir "$run__dir/scripts"
-    set -gx run__log_file "$run__dir/.log"
-    set -gx run__version "1.0.0"
-    set -gx run__repo_url "https://github.com/sby051/run.fish"
     echo "[run.fish installer] installing run v$run__version"
     echo "[run.fish installer] creating run directory"
     mkdir -p $run__script_dir

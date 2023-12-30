@@ -47,7 +47,7 @@ function run --description "Runs the corresponding script in the $run__script_di
     return 0
 end
 
-function run.delete --description "Deletes a script in the $run__script_dir directory"
+function run.rm --description "Removes a script in the $run__script_dir directory"
     set --local script_name $argv[1]
 
     if test (count $argv) -ne 1
@@ -69,7 +69,7 @@ function run.delete --description "Deletes a script in the $run__script_dir dire
     return 1
 end
 
-function run.link --description "Create symbolic link to an existing script in the $run__script_dir directory"
+function run.ln --description "Create symbolic link to an existing script in the $run__script_dir directory"
     set --local script_path $argv[1]
     set --local script_full_name (basename $script_path)
     set --local script_name $argv[2]
@@ -127,7 +127,7 @@ function run.log --description "Displays the run log file"
     cat $run__log_file
 end
 
-function run.list --description "Lists all scripts in the $run__script_dir directory"
+function run.ls --description "Lists all scripts in the $run__script_dir directory"
     echo "[run-list] Scripts in $run__script_dir:"
     for extension in $run__allowed_extensions
         for script in $run__script_dir/*.$extension
@@ -157,7 +157,7 @@ function run.edit --description "Opens the script in the $run__script_dir direct
     return 1
 end
 
-function run.create --description "Creates a new script in the $run__script_dir directory"
+function run.new --description "Creates a new script in the $run__script_dir directory"
     set --local script_name $argv[1]
     set --local script_type $argv[2]
 
