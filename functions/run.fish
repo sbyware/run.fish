@@ -116,7 +116,8 @@ function run.ls --description "List scripts in $run__script_dir"
     echo "[run.ls] Scripts in $run__script_dir:"
     for extension in $run__allowed_extensions
         for script in $run__script_dir/*.$extension
-            echo "- (basename $script .$extension)"
+            set --local script_name (basename $script .$extension)
+            echo "- $script_name"
         end
     end
 end
