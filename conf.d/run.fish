@@ -20,8 +20,12 @@ end
 
 function _run_uninstall --on-event run_uninstall
     echo "[run.fish uninstaller] uninstalling run v$run__version"
-    echo "[run.fish uninstaller] removing run directory"
-    rm -rf $run__dir
+    echo "[run.fish uninstaller] would you like to keep your scripts? [Y/n]: "
+    read keep_scripts
+    if test $keep_scripts = "n"
+        echo "[run.fish uninstaller] removing scripts"
+        rm -rf $run__dir
+    end
     echo "[run.fish uninstaller] removing run variables"
     set -e run__allowed_extensions
     set -e run__allowed_executables
