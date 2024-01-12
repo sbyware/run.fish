@@ -36,7 +36,7 @@ function run --description "Execute script from the $run__script_dir directory"
     end
 
     echo "[run] Executing '$script_path' with arguments: $script_args"
-    echo "$script_name $script_args" >> $run__history_file
+    echo "[$(date)] $script_name $script_args" >> $run__history_file
     $script_path $script_args
     echo "[run] '$script_name' execution completed."
 
